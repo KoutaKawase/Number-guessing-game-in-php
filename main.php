@@ -6,6 +6,7 @@ function printStartMessage(): void {
     print("======================================================\n");
     print("数当てゲームへようこそ！\n");
     print("数字は1から100までで構成されています。\n");
+    print("======================================================\n");
 }
 
 function generateSecretNumber(int $max): int {
@@ -43,14 +44,41 @@ function compareAnswer(int $ans, int $secNum): bool {
     }
 }
 
+function selectKeepGameOrExit(string $choice): void {
+    switch ($choice) {
+        case 1:
+            main();
+        case 2:
+            exit("また遊ぼうね！\n");
+    }
+
+}
+
+function checkStartTimerIsOk(): void {
+    while(true) {
+        print("Enterを押すとタイマーが計測開始します。よろしければEnterを押してください\n");
+        $isEnter = trim(fgets(STDIN));
+        if (mb_strlen($isEnter) === 0) {
+            break;
+        }
+    }
+}
 
 function main() {
+    //ミス回数
     $mistakeCounter = 0;
+    //答え生成
+    $secret_number = generateSecretNumber(100);
+    $startTime = 0;
+    $endTime = 0;
+    $resultTime = 0;
     //開始メッセージ出力
     printStartMessage();
-    print("======================================================\n");
-    //答えを生成
-    $secret_number = generateSecretNumber(100);
+    //タイマー開始の確認
+    checkStartTimerIsOk();
+    //タイマー開始
+    $startTime = time();
+
     //正解まで繰り返す
     while(true) {
         //ユーザー入力を取得
@@ -60,25 +88,24 @@ function main() {
 
         //解答を比較。間違っていたらミス数をカウント
         if(compareAnswer($answer, $secret_number)) {
+            //正解したら計測終了
+            $endTime = time();
             break;
         } else {
             $mistakeCounter++;
         }
     }
 
+    //プレイ時間を計測 ミリ秒から時間:分:秒に変換
+    $resultTime = date("H時間i分s秒",$endTime-$startTime);
+    print("\nタイム: " . $resultTime . "\n");
     print("試行回数: " . $mistakeCounter . "回\n");
     //もう一度するか聞く
     print("もう一度やりますか？下の数字から選択してください。\n");
     print("(1) もう一度やる\n(2) やめる\n>> ");
-    $choice = fgets(STDIN);
-
-    switch ($choice) {
-        case 1:
-            main();
-        case 2:
-            exit("また遊ぼうね！\n");
-    }
-
+    $choice = trim(fgets(STDIN));
+    //１なら続ける 2ならやめる
+    selectKeepGameOrExit($choice);
 }
 
 main();
