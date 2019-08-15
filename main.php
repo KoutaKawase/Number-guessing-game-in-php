@@ -14,10 +14,15 @@ function generateSecretNumber(int $max): int {
 }
 
 function getInputFromUser(): int {
-    print("数字を入力してください >> ");
-    $answer = fgets(STDIN);
-
-    return (int)$answer;
+    while(true) {
+        print("数字を入力してください >> ");
+        $answer =trim(fgets(STDIN));
+        if (!is_numeric($answer)) {
+            print("無効な文字です！数字のみもう一度入力してください。\n");
+        } else {
+            return (int) $answer;
+        }
+    }
 }
 
 function compareAnswer(int $ans, int $secNum): bool {
