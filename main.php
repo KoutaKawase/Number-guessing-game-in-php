@@ -25,6 +25,7 @@ function getInputFromUser(): int {
     }
 }
 
+
 function compareAnswer(int $ans, int $secNum): bool {
     $isCorrect = False;
     if ($secNum < $ans) {
@@ -42,7 +43,9 @@ function compareAnswer(int $ans, int $secNum): bool {
     }
 }
 
+
 function main() {
+    $mistakeCounter = 0;
     //開始メッセージ出力
     printStartMessage();
     print("======================================================\n");
@@ -55,11 +58,15 @@ function main() {
         //合ってたら正解を、大きいか小さいならそれを。
         print("あなたの選択数字は" . $answer . "です。\n");
 
+        //解答を比較。間違っていたらミス数をカウント
         if(compareAnswer($answer, $secret_number)) {
             break;
-        };
+        } else {
+            $mistakeCounter++;
+        }
     }
 
+    print("試行回数: " . $mistakeCounter . "回\n");
     //もう一度するか聞く
     print("もう一度やりますか？下の数字から選択してください。\n");
     print("(1) もう一度やる\n(2) やめる\n>> ");
